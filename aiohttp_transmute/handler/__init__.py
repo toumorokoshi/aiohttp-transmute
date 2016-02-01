@@ -1,6 +1,7 @@
 from functools import wraps
 from .parameters import _get_param_extractor
-from web_transmute import contenttype_serializers
+from web_transmute import contenttype_serializers, serializers
+from aiohttp import web
 
 
 def create_handler(transmute_func, method=None):
@@ -11,7 +12,22 @@ def create_handler(transmute_func, method=None):
     @wraps(transmute_func.raw_func)
     async def handler(request):
         args = await extract_params(request)
-        output = await transmute_func.raw_func(**args)
-        return contenttype_serializers.to_type(request.content_type, output)
+        try:
+            output = {
+                "result": await transmute_func.raw_func(**args),
+                "code": 200,
+                "success": True
+            }
+        except Exception as e:
+            output = {
+                "result": "as exception occurred: ".format(str(e)),
+                "success": False
+            }
+        if transmute_func.return_type:
+            output = serializers[transmute_func.return_type].dump(output)
+        body = contenttype_serializers.to_type(request.content_type, output)
+        return web.Response(
+            body=body
+        )
 
     return handler

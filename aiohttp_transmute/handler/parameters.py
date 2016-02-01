@@ -17,12 +17,13 @@ def _get_queryparam_extractor(transmute_func):
     async def _get_queryparams(request):
         args = {}
         for arg in all_args:
-            if arg.name is request.GET:
+            if arg.name in request.GET:
                 args[arg.name] = serializers[arg.type].load(request.GET[arg.name])
                 continue
 
             if arg.default != signature.NoDefault:
                 args[args.name] = arg.default
+                continue
 
             raise ApiException("required parameter {0} was not passed.".format(arg.name))
         return args
