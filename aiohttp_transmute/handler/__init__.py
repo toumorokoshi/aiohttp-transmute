@@ -30,4 +30,5 @@ def create_handler(transmute_func, method=None):
             body=body
         )
 
+    handler.transmute_func = transmute_func
     return handler
