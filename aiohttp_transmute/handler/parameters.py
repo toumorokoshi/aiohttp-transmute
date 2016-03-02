@@ -12,10 +12,12 @@ def _get_param_extractor(transmute_func):
 def _get_queryparam_extractor(transmute_func):
 
     signature = transmute_func.signature
-    all_args = signature.args + list(signature.kwargs.values())
+    all_args = set(signature.args + list(signature.kwargs.values()))
+    # remove request, it's always passed in.
+    all_args.remove("request")
 
     async def _get_queryparams(request):
-        args = {}
+        args = {"request": request}
         for arg in all_args:
             if arg.name in request.GET:
                 args[arg.name] = serializers[arg.type].load(request.GET[arg.name])
