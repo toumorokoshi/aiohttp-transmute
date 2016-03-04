@@ -1,6 +1,7 @@
 from functools import wraps
 from .parameters import _get_param_extractor
 from web_transmute import contenttype_serializers, serializers
+from web_transmute.contenttype_serializers import NoSerializerFound
 from aiohttp import web
 
 
@@ -25,7 +26,10 @@ def create_handler(transmute_func, method=None):
             }
         if transmute_func.return_type:
             output = serializers[transmute_func.return_type].dump(output)
-        body = contenttype_serializers.to_type(request.content_type, output)
+        try:
+            body = contenttype_serializers.to_type(request.content_type, output)
+        except NoSerializerFound:
+            body = contenttype_serializers.to_type("json", output)
         return web.Response(
             body=body
         )
