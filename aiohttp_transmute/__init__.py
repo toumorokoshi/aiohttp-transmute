@@ -2,6 +2,7 @@ from web_transmute import *
 from web_transmute.function import TransmuteFunction
 from aiohttp.web import UrlDispatcher
 from .handler import create_handler
+from .swagger import add_swagger_api_route
 from swagger_schema import Paths, Path
 
 
