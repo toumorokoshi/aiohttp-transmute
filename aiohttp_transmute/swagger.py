@@ -1,4 +1,6 @@
+import json
 from aiohttp import web
+from swagger_schema import Swagger, Info
 
 from web_transmute.swagger import (
     generate_swagger,
@@ -20,3 +22,24 @@ def add_swagger_api_route(app, target_route, swagger_json_route):
 
     app.router.add_route("GET", target_route, swagger_ui)
     app.router.add_static(STATIC_ROOT, static_root)
+
+
+def create_swagger_json_handler(app):
+
+    spec = Swagger(
+        info=Info(title="example", version="1.0"),
+        paths=app.router.swagger_paths(),
+        swagger="2.0",
+    ).dump()
+    encoded_spec = json.dumps(spec).encode("UTF-8")
+
+    async def swagger(request):
+        return web.Response(
+            # we allow CORS, so this can be requested at swagger.io
+            headers={
+                "Access-Control-Allow-Origin": "*"
+            },
+            body=encoded_spec
+        )
+
+    return swagger
