@@ -2,7 +2,7 @@ from functools import wraps
 from .parameters import _get_param_extractor
 from web_transmute import default_context
 from web_transmute.contenttype_serializers import NoSerializerFound
-from web_transmute.exceptions import ApiException
+from web_transmute.exceptions import APIException
 from aiohttp import web
 
 
@@ -25,10 +25,11 @@ def create_handler(transmute_func, method=None, context=default_context):
                 "code": 200,
                 "success": True
             }
-        except ApiException as e:
+        except APIException as e:
             output = {
                 "result": "invalid api use: {0}".format(str(e)),
-                "success": False
+                "success": False,
+                "code": e.code
             }
         try:
             body = context.contenttype_serializers.to_type(
@@ -37,7 +38,7 @@ def create_handler(transmute_func, method=None, context=default_context):
         except NoSerializerFound:
             body = context.contenttype_serializers.to_type("json", output)
         return web.Response(
-            body=body
+            body=body, status=output["code"]
         )
 
     handler.transmute_func = transmute_func
