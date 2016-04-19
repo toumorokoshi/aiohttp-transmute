@@ -2,7 +2,7 @@ import json
 from aiohttp import web
 from swagger_schema import Swagger, Info
 
-from web_transmute.swagger import (
+from transmute_core.swagger import (
     generate_swagger,
     get_swagger_static_root
 )

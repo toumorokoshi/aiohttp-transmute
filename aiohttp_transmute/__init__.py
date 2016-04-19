@@ -1,5 +1,5 @@
-from web_transmute import *
-from web_transmute.function import TransmuteFunction
+from transmute_core import *
+from transmute_core.function import TransmuteFunction
 from aiohttp.web import UrlDispatcher
 from .handler import create_handler
 from .swagger import add_swagger_api_route, create_swagger_json_handler

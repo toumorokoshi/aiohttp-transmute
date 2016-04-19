@@ -1,4 +1,4 @@
-from web_transmute.exceptions import APIException
+from transmute_core.exceptions import APIException
 
 
 def _get_param_extractor(transmute_func, context):

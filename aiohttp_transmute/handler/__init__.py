@@ -1,8 +1,8 @@
 from functools import wraps
 from .parameters import _get_param_extractor
-from web_transmute import default_context
-from web_transmute.contenttype_serializers import NoSerializerFound
-from web_transmute.exceptions import APIException
+from transmute_core import default_context
+from transmute_core.contenttype_serializers import NoSerializerFound
+from transmute_core.exceptions import APIException
 from aiohttp import web
 
 
