@@ -57,9 +57,8 @@ def _get_body_extractor(transmute_func, context):
     async def _get_body_params(request):
         args = {}
         content = await request.content.read()
-        body_dict = context.contenttype_serializers.from_type(
-            request.content_type, content
-        )
+        serializer = context.contenttype_serializers[request.content_type]
+        body_dict = serializer.load(content)
         if add_request:
             args["request"] = request
         _add_match_info(request, args)

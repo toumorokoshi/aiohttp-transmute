@@ -1,12 +1,10 @@
 from functools import wraps
 from .parameters import _get_param_extractor
-from transmute_core import default_context
-from transmute_core.contenttype_serializers import NoSerializerFound
-from transmute_core.exceptions import APIException
+from transmute_core import APIException, NoSerializerFound
 from aiohttp import web
 
 
-def create_handler(transmute_func, method=None, context=default_context):
+def create_handler(transmute_func, context, method=None):
     method = method or next(iter(transmute_func.http_methods))
 
     extract_params = _get_param_extractor(transmute_func, context)
@@ -32,11 +30,10 @@ def create_handler(transmute_func, method=None, context=default_context):
                 "code": e.code
             }
         try:
-            body = context.contenttype_serializers.to_type(
-                request.content_type, output
-            )
+            serializer = context.contenttype_serializer[request.content_type]
         except NoSerializerFound:
-            body = context.contenttype_serializers.to_type("json", output)
+            serializer = context.contenttype_serializer["json"]
+        body = serializer.dump(output)
         return web.Response(
             body=body, status=output["code"]
         )

@@ -1,16 +1,17 @@
 from transmute_core import *
 from transmute_core.function import TransmuteFunction
+from transmute_core import default_context
 from aiohttp.web import UrlDispatcher
 from .handler import create_handler
 from .swagger import add_swagger_api_route, create_swagger_json_handler
 from swagger_schema import Paths, Path
 
 
-def to_route(**options):
+def to_route(context=default_context, **options):
 
     def decorator(fn):
         transmute_func = TransmuteFunction(fn, **options)
-        return create_handler(transmute_func)
+        return create_handler(transmute_func, context=context)
 
     return decorator
 
