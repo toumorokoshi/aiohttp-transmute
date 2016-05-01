@@ -3,7 +3,7 @@ from transmute_core.function import TransmuteFunction
 from transmute_core import default_context
 from aiohttp.web import UrlDispatcher
 from .handler import create_handler
-from .swagger import add_swagger_api_route, create_swagger_json_handler
+from .swagger import add_swagger_api_route, create_swagger_json_handler, add_swagger
 from swagger_schema import Paths, Path
 
 

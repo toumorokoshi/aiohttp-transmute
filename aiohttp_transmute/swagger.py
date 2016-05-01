@@ -43,3 +43,13 @@ def create_swagger_json_handler(app):
         )
 
     return swagger
+
+
+def add_swagger(app, json_route, html_route):
+    """
+    a convenience method for both adding a swagger.json route,
+    as well as adding a page showing the html documentation
+    """
+    app.router.add_route('GET', '/swagger.json',
+                         create_swagger_json_handler(app))
+    add_swagger_api_route(app, "/swagger", "/swagger.json")
