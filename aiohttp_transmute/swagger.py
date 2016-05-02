@@ -10,12 +10,28 @@ from transmute_core.swagger import (
 STATIC_ROOT = "/_swagger/static"
 
 
+def add_swagger(app, json_route, html_route):
+    """
+    a convenience method for both adding a swagger.json route,
+    as well as adding a page showing the html documentation
+    """
+    app.router.add_route('GET', json_route, create_swagger_json_handler(app))
+    add_swagger_api_route(app, html_route, json_route)
+
+
 def add_swagger_api_route(app, target_route, swagger_json_route):
     """
-    add the swagger statics to the route,
+    mount a swagger statics page.
+
+    app: the aiohttp app object
+    target_route: the path to mount the statics page.
+    swagger_json_route: the path where the swagger json definitions is
+        expected to be.
     """
     static_root = get_swagger_static_root()
-    swagger_body = generate_swagger(STATIC_ROOT, swagger_json_route).encode("utf-8")
+    swagger_body = generate_swagger(
+        STATIC_ROOT, swagger_json_route
+    ).encode("utf-8")
 
     async def swagger_ui(request):
         return web.Response(body=swagger_body)
@@ -25,6 +41,13 @@ def add_swagger_api_route(app, target_route, swagger_json_route):
 
 
 def create_swagger_json_handler(app):
+    """
+    Create a handler that returns the swagger definition
+    for an application.
+
+    This method assumes the application is using the
+    TransmuteUrlDispatcher as the router.
+    """
 
     spec = Swagger(
         info=Info(title="example", version="1.0"),
@@ -43,13 +66,3 @@ def create_swagger_json_handler(app):
         )
 
     return swagger
-
-
-def add_swagger(app, json_route, html_route):
-    """
-    a convenience method for both adding a swagger.json route,
-    as well as adding a page showing the html documentation
-    """
-    app.router.add_route('GET', '/swagger.json',
-                         create_swagger_json_handler(app))
-    add_swagger_api_route(app, "/swagger", "/swagger.json")

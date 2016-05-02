@@ -20,9 +20,6 @@ Example
 
 .. code-block:: python
 
-    # annotating a route
-    # adding swagger
-
     from aiohttp import web
     import aiohttp_transmute
 
@@ -32,11 +29,16 @@ Example
     async def multiply(request, name: str, left: int, right: int) -> int:
         return left + right
 
-    app = web.Application()
+    app = web.Application(
+        # a custom router is needed to help find the transmute functions.
+        router=aiohttp_transmute.TransmuteUrlDispatcher())
+    )
     app.router.add_route('GET', '/{name}', multiply)
     # this should be at the end, to ensure all routes are considered when
     # constructing the handler.
-    # this will add a swagger.json definition
+    # this will add:
+    #   - a swagger.json definition
+    #   - a static page that renders the swagger.json
     aiohttp_transmute.add_swagger(app, "/swagger.json", "/swagger")
     web.run_app(app)
 
@@ -48,19 +50,4 @@ Contents:
 
    routes
    serialization
-   swagger
-
-
-aiohttp-transmute is a transmute framework for `aiohttp
-<http://aiohttp.readthedocs.org/>`_.
-
-Read the users guide
-
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+   documentation
