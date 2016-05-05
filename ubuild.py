@@ -12,6 +12,7 @@ def test(build):
     build.packages.install("jedi")
     build.packages.install("pytest")
     build.packages.install("pytest-cov")
+    build.packages.install("pytest-asyncio")
     pytest = os.path.join(build.root, "bin", "py.test")
     subprocess.call([
         pytest, "--cov", "aiohttp_transmute",
