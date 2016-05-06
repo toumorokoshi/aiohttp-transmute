@@ -12,7 +12,7 @@ async def handle(request):
 
 @to_route()
 async def multiply(request, left: int, right: int) -> int:
-    return left + right
+    return left * right
 
 
 def create_app(loop):
