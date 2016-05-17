@@ -1,19 +1,18 @@
 from functools import wraps
-from .parameters import _get_param_extractor
+from .parameters import extract_params
 from transmute_core import APIException, NoSerializerFound
 from aiohttp import web
 
 
-def create_handler(transmute_func, context, method=None):
-    method = method or next(iter(transmute_func.http_methods))
-
-    extract_params = _get_param_extractor(transmute_func, context)
+def create_handler(transmute_func, context):
 
     @wraps(transmute_func.raw_func)
     async def handler(request):
-        args = await extract_params(request)
+        args, kwargs = await extract_params(request, context,
+                                            transmute_func.signature,
+                                            transmute_func.parameters)
         try:
-            result = await transmute_func.raw_func(**args)
+            result = await transmute_func.raw_func(*args, **kwargs)
             if transmute_func.return_type:
                 result = context.serializers.dump(
                     transmute_func.return_type, result

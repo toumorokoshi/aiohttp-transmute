@@ -3,7 +3,6 @@ import subprocess
 
 
 def main(build):
-    build.packages.install("../transmute-core", develop=True)
     build.packages.install(".", develop=True)
 
 
@@ -18,7 +17,7 @@ def test(build):
         pytest, "--cov", "aiohttp_transmute",
         "aiohttp_transmute/tests",
         "--cov-report", "term-missing"
-    ])
+    ] + build.options.args)
 
 
 def distribute(build):

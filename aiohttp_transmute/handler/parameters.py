@@ -1,85 +1,58 @@
 from transmute_core.exceptions import APIException
 
 
-def _get_param_extractor(transmute_func, context):
-    if "GET" in transmute_func.http_methods:
-        return _get_queryparam_extractor(transmute_func, context)
-    else:
-        return _get_body_extractor(transmute_func, context)
+async def extract_params(request, context, signature, parameters):
+    args = {}
+    if signature.get_argument("request"):
+        args["request"] = request
 
+    empty_args = []
 
-def _get_queryparam_extractor(transmute_func, context):
+    for name, arginfo in parameters.query.items():
+        if name in request.GET:
+            args[name] = context.serializers.load(arginfo.type, request.GET[name])
+        else:
+            empty_args.append(arginfo)
 
-    signature = transmute_func.signature
-    all_args = set()
-    add_request = False
-    for arg in signature.args + list(signature.kwargs.values()):
-        if arg.name == "request":
-            add_request = True
-            continue
-        all_args.add(arg)
+    for name, arginfo in parameters.header.items():
+        if name in request.headers:
+            args[name] = context.serializers.load(arginfo.type, request.headers[name])
+        else:
+            empty_args.append(arginfo)
 
-    async def _get_queryparams(request):
-        args = {}
-        if add_request:
-            args["request"] = request
-        _add_match_info(request, args)
-        for arg in all_args:
-            if arg.name in args:
-                continue
-            if arg.name in request.GET:
-                args[arg.name] = context.serializers.load(
-                    arg.type, request.GET[arg.name]
-                )
-                continue
-
-            if arg.default != signature.NoDefault:
-                args[args.name] = arg.default
-                continue
-
-            raise APIException("required parameter {0} was not passed.".format(arg.name))
-        return args
-
-    return _get_queryparams
-
-
-def _get_body_extractor(transmute_func, context):
-
-    signature = transmute_func.signature
-    all_args = set()
-    add_request = False
-    for arg in signature.args + list(signature.kwargs.values()):
-        if arg.name == "request":
-            add_request = True
-            continue
-        all_args.add(arg)
-
-    async def _get_body_params(request):
-        args = {}
+    if len(parameters.body) > 0:
+        # we don't want to try to read the body, if we don't need to.
+        # in these cases, an empty body will usually be passed
         content = await request.content.read()
         serializer = context.contenttype_serializers[request.content_type]
         body_dict = serializer.load(content)
-        if add_request:
-            args["request"] = request
-        _add_match_info(request, args)
-        for arg in all_args:
-            if arg.name in args:
-                continue
-            if arg.name in body_dict:
-                args[arg.name] = context.serializers.load(
-                    arg.type, body_dict[arg.name]
-                )
-                continue
+        for name, arginfo in parameters.body.items():
+            if name in body_dict:
+                args[name] = context.serializers.load(arginfo.type, body_dict[name])
+            else:
+                empty_args.append(arginfo)
 
-            if arg.default != signature.NoDefault:
-                args[args.name] = arg.default
+    for name, arginfo in parameters.path.items():
+        if name in request.match_info:
+            args[name] = context.serializers.load(arginfo.type, request.match_info[name])
+        else:
+            empty_args.append(arginfo)
 
-            raise APIException("required parameter {0} was not passed.".format(arg.name))
-        return args
+    required_params_not_passed = []
 
-    return _get_body_params
+    for arg in empty_args:
+        if arg.default is None:
+            required_params_not_passed.append(arg.name)
+        else:
+            args[arg.name] = arg.default
 
+    if len(required_params_not_passed) > 0:
+        raise APIException(
+            "required arguments {0} not passed".format(required_params_not_passed)
+        )
 
-def _add_match_info(request, args):
-    for k, v in request.match_info.items():
-        args[k] = v
+    pos_args = []
+    for arg in signature.args:
+        pos_args.append(args[arg.name])
+        del args[arg.name]
+    return pos_args, args

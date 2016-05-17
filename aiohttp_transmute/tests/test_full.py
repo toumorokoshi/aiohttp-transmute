@@ -23,41 +23,60 @@ async def test_multiply(client_request):
 
 
 @pytest.mark.asyncio
+async def test_get_id(client_request):
+    resp = await client_request('GET', '/id/10')
+    assert 200 == resp.status
+    text = await resp.text()
+    assert json.loads(text) == {
+        "result": "your id is: 10",
+        "success": True,
+        "code": 200
+    }
+
+
+@pytest.mark.asyncio
+async def test_config(client_request):
+    resp = await client_request('GET', '/config')
+    assert 200 == resp.status
+    text = await resp.text()
+    assert json.loads(text) == {
+        "result": {"test": "foo"},
+        "success": True,
+        "code": 200
+    }
+
+
+@pytest.mark.asyncio
 async def test_swagger(client_request):
     resp = await client_request('GET', '/swagger.json')
     assert 200 == resp.status
     text = await resp.text()
-    assert json.loads(text) == {
-        "swagger": "2.0",
-        "paths": {
-            "/multiply": {
-                "get": {
-                    "produces": ["application/json"],
-                    "consumes": ["application/json"],
-                    "responses": {
-                        "200": {
-                            "schema": {
-                                "required": ["success", "result"],
-                                "properties": {
-                                    "result": {"type": "string"},
-                                    "success": {"type": "boolean"}
-                                }
-                            },
-                            "description": "success"
-                        },
-                        "400": {
-                            "schema": {
-                                "required": ["success", "message"],
-                                "properties": {
-                                    "message": {"type": "string"},
-                                    "success": {"type": "boolean"}
-                                }
-                            },
-                            "description": "invalid input received"}
+    assert json.loads(text)["paths"]["/multiply"] == {
+        "get": {
+            "produces": ["application/json", "application/x-yaml"],
+            "consumes": ["application/json", "application/x-yaml"],
+            "responses": {
+                "200": {
+                    "schema": {
+                        "required": ["success", "result"],
+                        "properties": {
+                            "result": {"type": "number"},
+                            "success": {"type": "boolean"}
+                        }
                     },
-                    "summary": "",
-                    "description": ""}
-            }
-        },
-        "info": {"title": "example", "version": "1.0"}
+                    "description": "success"
+                },
+                "400": {
+                    "schema": {
+                        "required": ["success", "message"],
+                        "properties": {
+                            "message": {"type": "string"},
+                            "success": {"type": "boolean"}
+                        }
+                    },
+                    "description": "invalid input received"}
+            },
+            "summary": "",
+            "description": ""
+        }
     }

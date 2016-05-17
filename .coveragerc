@@ -1,0 +1,2 @@
+[run]
+omit = aiohttp_transmute/tests/*
