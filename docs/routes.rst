@@ -16,12 +16,12 @@ a decorator converting a function to an aiohttp route:
 
     # define a GET endpoint, taking a query parameter integers left and right,
     # which must be integers.
-    @aiohttp_transmute.to_route()
+    @aiohttp_transmute.describe(paths="/{name}")
     async def multiply(request, name: str, left: int, right: int) -> int:
         return left + right
 
     # append to your route later
-    app.router.add_route('GET', '/{name}', multiply)
+    app.router.add_transmute_route(multiply)
 
 ------------------------
 query parameters vs body
@@ -36,20 +36,19 @@ parse the body.
 
     import aiohttp_transmute
 
-    @aiohttp_transmute.to_route()
     # interpreted as query parameters
+    @aiohttp_transmute.describe(paths="/{name}")
     async def multiply(request, name: str, left: int, right: int) -> int:
         return left + right
 
     # interpreted as body parameters
-    @aiohttp_transmute.to_route()
-    @aiohttp_transmute.POST
+    @aiohttp_transmute.describe(methods=["POST"], paths="/{name}")
     async def multiply_post(request, name: str, left: int, right: int) -> int:
         return left + right
 
     # append to your route later
-    app.router.add_route('GET', '/{name}', multiply)
-    app.router.add_route('POST', '/{name}', multiply_post)
+    app.router.add_transmute_route(multiply)
+    app.router.add_transmute_route(multiply_post)
 
 -----------------
 API Documentation

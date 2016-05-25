@@ -25,7 +25,7 @@ Example
 
     # define a GET endpoint, taking a query parameter integers left and right,
     # which must be integers.
-    @aiohttp_transmute.to_route()
+    @aiohttp_transmute.describe(paths="/{name}")
     async def multiply(request, name: str, left: int, right: int) -> int:
         return left + right
 
@@ -33,7 +33,7 @@ Example
         # a custom router is needed to help find the transmute functions.
         router=aiohttp_transmute.TransmuteUrlDispatcher())
     )
-    app.router.add_route('GET', '/{name}', multiply)
+    app.router.add_transmute_route(multiply)
     # this should be at the end, to ensure all routes are considered when
     # constructing the handler.
     # this will add:
