@@ -8,10 +8,10 @@ def create_handler(transmute_func, context):
 
     @wraps(transmute_func.raw_func)
     async def handler(request):
-        args, kwargs = await extract_params(request, context,
-                                            transmute_func.signature,
-                                            transmute_func.parameters)
         try:
+            args, kwargs = await extract_params(request, context,
+                                                transmute_func.signature,
+                                                transmute_func.parameters)
             result = await transmute_func.raw_func(*args, **kwargs)
             if transmute_func.return_type:
                 result = context.serializers.dump(

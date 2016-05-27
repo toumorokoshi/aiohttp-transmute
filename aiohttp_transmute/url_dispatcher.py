@@ -27,7 +27,11 @@ class TransmuteUrlDispatcher(UrlDispatcher):
             if p not in self._swagger:
                 self._swagger[p] = swagger_path
             else:
-                self._swagger[p].update(swagger_path)
+                # todo: when swagger-schema switches
+                # to schematics, use a more graceful merge system.
+                for method in swagger_path.__dict__.keys():
+                    if not method.startswith("_"):
+                        setattr(self._swagger[p], method, getattr(swagger_path, method))
 
             # add to aiohttp
             aiohttp_path = self._convert_to_aiohttp_path(p)
