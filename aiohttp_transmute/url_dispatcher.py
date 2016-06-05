@@ -1,6 +1,5 @@
 from aiohttp.web import UrlDispatcher
 from transmute_core import default_context
-from swagger_schema import Paths
 from transmute_core.function import TransmuteFunction
 from .handler import create_handler
 
@@ -14,7 +13,7 @@ class TransmuteUrlDispatcher(UrlDispatcher):
     def __init__(self, *args, context=default_context, **kwargs):
         super().__init__()
         self._transmute_context = context
-        self._swagger = Paths()
+        self._swagger = {}
 
     def add_transmute_route(self, fn):
         transmute_func = TransmuteFunction(fn, args_not_from_request=["request"])
@@ -27,11 +26,8 @@ class TransmuteUrlDispatcher(UrlDispatcher):
             if p not in self._swagger:
                 self._swagger[p] = swagger_path
             else:
-                # todo: when swagger-schema switches
-                # to schematics, use a more graceful merge system.
-                for method in swagger_path.__dict__.keys():
-                    if not method.startswith("_"):
-                        setattr(self._swagger[p], method, getattr(swagger_path, method))
+                for method, definition in swagger_path.items():
+                    setattr(self._swagger[p], method, definition)
 
             # add to aiohttp
             aiohttp_path = self._convert_to_aiohttp_path(p)

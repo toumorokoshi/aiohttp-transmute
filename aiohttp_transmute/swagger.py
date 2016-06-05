@@ -49,11 +49,11 @@ def create_swagger_json_handler(app):
     TransmuteUrlDispatcher as the router.
     """
 
-    spec = Swagger(
-        info=Info(title="example", version="1.0"),
-        paths=app.router.swagger_paths(),
-        swagger="2.0",
-    ).dump()
+    spec = Swagger({
+        "info": Info({"title": "example", "version": "1.0"}),
+        "paths": app.router.swagger_paths(),
+        "swagger": "2.0",
+    }).to_primitive()
     encoded_spec = json.dumps(spec).encode("UTF-8")
 
     async def swagger(request):

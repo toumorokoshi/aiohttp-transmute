@@ -18,8 +18,8 @@ def srv_and_url(app):
     teardown_server(app, srv)
 
 
-@pytest.fixture
-def client_request(event_loop, srv_and_url):
+@pytest.yield_fixture
+def client_request(event_loop, app, srv_and_url):
     srv, root = srv_and_url
     async def func(method, url, *args,  **kwargs):
         """
@@ -29,4 +29,5 @@ def client_request(event_loop, srv_and_url):
         url = root + url
         return await request(method, url, *args,
                              loop=event_loop, **kwargs)
-    return func
+    yield func
+    teardown_server(app, srv)
