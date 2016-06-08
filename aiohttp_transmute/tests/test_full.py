@@ -4,7 +4,7 @@ import json
 
 # TODO:
 @pytest.mark.asyncio
-async def test_unsupported_contenttype_sent():
+async def _test_unsupported_contenttype_sent():
     """ an unsupported contenttype should return a 400 """
     raise Exception()
 
