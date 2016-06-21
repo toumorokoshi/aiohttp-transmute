@@ -54,4 +54,4 @@ parse the body.
 API Documentation
 -----------------
 
-.. autofunction:: aiohttp_transmute.to_route
+.. autofunction:: aiohttp_transmute.describe
