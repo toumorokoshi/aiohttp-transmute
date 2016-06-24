@@ -30,6 +30,24 @@ async def test_multiply(client_request):
 
 
 @pytest.mark.asyncio
+async def test_multiply_bad_int(client_request):
+    resp = await client_request('GET', '/multiply?left=foo&right=0x00')
+    assert 400 == resp.status
+    ret_value = await resp.json()
+    assert ret_value["success"] is False
+    assert ret_value["code"] == 400
+
+
+@pytest.mark.asyncio
+async def test_describe_later(client_request):
+    resp = await client_request('GET', '/describe_later')
+    assert 200 == resp.status
+    ret_value = await resp.json()
+    assert ret_value["success"] is True
+    assert ret_value["result"] == "foo"
+
+
+@pytest.mark.asyncio
 async def test_get_id(client_request):
     resp = await client_request('GET', '/id/10')
     assert 200 == resp.status
@@ -58,32 +76,26 @@ async def test_swagger(client_request):
     resp = await client_request('GET', '/swagger.json')
     assert 200 == resp.status
     text = await resp.text()
-    assert json.loads(text)["paths"]["/multiply"] == {
-        "get": {
-            "produces": ["application/json", "application/x-yaml"],
-            "consumes": ["application/json", "application/x-yaml"],
-            "responses": {
-                "200": {
-                    "schema": {
-                        "required": ["success", "result"],
-                        "properties": {
-                            "result": {"type": "number"},
-                            "success": {"type": "boolean"}
-                        }
-                    },
-                    "description": "success"
-                },
-                "400": {
-                    "schema": {
-                        "required": ["success", "message"],
-                        "properties": {
-                            "message": {"type": "string"},
-                            "success": {"type": "boolean"}
-                        }
-                    },
-                    "description": "invalid input received"}
+    assert json.loads(text)["paths"]["/multiply"]["get"]["responses"] == {
+        "200": {
+            "schema": {
+                "title": "SuccessObject",
+                "required": ["success", "result"],
+                "properties": {
+                    "result": {"type": "number"},
+                    "success": {"type": "boolean"}
+                }
             },
-            "summary": "",
-            "description": ""
-        }
+            "description": "success"
+        },
+        "400": {
+            "schema": {
+                "title": "FailureObject",
+                "required": ["success", "message"],
+                "properties": {
+                    "message": {"type": "string"},
+                    "success": {"type": "boolean"}
+                }
+            },
+            "description": "invalid input received"}
     }

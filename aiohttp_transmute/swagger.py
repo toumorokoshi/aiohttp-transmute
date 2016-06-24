@@ -40,7 +40,7 @@ def add_swagger_api_route(app, target_route, swagger_json_route):
     app.router.add_static(STATIC_ROOT, static_root)
 
 
-def create_swagger_json_handler(app):
+def create_swagger_json_handler(app, title="example", version="1.0"):
     """
     Create a handler that returns the swagger definition
     for an application.
@@ -50,7 +50,7 @@ def create_swagger_json_handler(app):
     """
 
     spec = Swagger({
-        "info": Info({"title": "example", "version": "1.0"}),
+        "info": Info({"title": title, "version": version}),
         "paths": app.router.swagger_paths(),
         "swagger": "2.0",
     }).to_primitive()

@@ -24,10 +24,18 @@ async def config(request):
     return request.app["config"]
 
 
+@aiohttp_transmute.describe()
+async def describe_later() -> str:
+    return "foo"
+
+
 def create_app(loop):
     app = web.Application(loop=loop, router=TransmuteUrlDispatcher())
     app["config"] = {"test": "foo"}
     app.router.add_route('GET', '/', handle)
+    # the preferred form.
+    app.router.add_transmute_route("GET", "/describe_later", describe_later)
+    # the legacy form should be supported.
     app.router.add_transmute_route(multiply)
     app.router.add_transmute_route(get_id)
     app.router.add_transmute_route(config)
