@@ -29,12 +29,17 @@ async def describe_later() -> str:
     return "foo"
 
 
+async def multiple_query_params(tag: [str]) -> str:
+    return ",".join(tag)
+
+
 def create_app(loop):
     app = web.Application(loop=loop, router=TransmuteUrlDispatcher())
     app["config"] = {"test": "foo"}
     app.router.add_route('GET', '/', handle)
     # the preferred form.
     app.router.add_transmute_route("GET", "/describe_later", describe_later)
+    app.router.add_transmute_route("GET", "/multiple_query_params", multiple_query_params)
     # the legacy form should be supported.
     app.router.add_transmute_route(multiply)
     app.router.add_transmute_route(get_id)

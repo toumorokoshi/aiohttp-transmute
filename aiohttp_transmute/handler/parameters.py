@@ -11,7 +11,11 @@ async def extract_params(request, context, signature, parameters):
 
     for name, arginfo in parameters.query.items():
         if name in request.GET:
-            args[name] = context.serializers.load(arginfo.type, request.GET[name])
+            if isinstance(arginfo.type, list):
+                values = request.GET.getall(name)
+            else:
+                values = request.GET[name]
+            args[name] = context.serializers.load(arginfo.type, values)
         else:
             empty_args.append(arginfo)
 
