@@ -39,6 +39,22 @@ async def test_multiply_bad_int(client_request):
 
 
 @pytest.mark.asyncio
+async def test_optional(client_request):
+    resp = await client_request('GET', '/optional')
+    assert 200 == resp.status
+    ret_value = await resp.json()
+    assert ret_value["result"] is False
+
+
+@pytest.mark.asyncio
+async def test_optional_with_value(client_request):
+    resp = await client_request('GET', '/optional?include_foo=true')
+    assert 200 == resp.status
+    ret_value = await resp.json()
+    assert ret_value["result"] is True
+
+
+@pytest.mark.asyncio
 async def test_describe_later(client_request):
     resp = await client_request('GET', '/describe_later')
     assert 200 == resp.status

@@ -19,6 +19,11 @@ async def get_id(request, my_id: str) -> str:
     return "your id is: " + my_id
 
 
+@aiohttp_transmute.describe(paths="/optional")
+async def get_optional(request, include_foo: bool=False) -> bool:
+    return include_foo
+
+
 @aiohttp_transmute.describe(paths="/config")
 async def config(request):
     return request.app["config"]
@@ -44,6 +49,7 @@ def create_app(loop):
     app.router.add_transmute_route(multiply)
     app.router.add_transmute_route(get_id)
     app.router.add_transmute_route(config)
+    app.router.add_transmute_route(get_optional)
     # this should be at the end, to ensure all routes are considered when
     # constructing the handler.
     add_swagger(app, "/swagger.json", "/swagger")
