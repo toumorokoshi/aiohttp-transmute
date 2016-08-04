@@ -28,7 +28,7 @@ Example
 
     # further specialization is available via describe
     # via aiohttp_transmute.describe
-    aiohttp_transmute.describe(error_exceptions=[ValueError])
+    @aiohttp_transmute.describe(error_exceptions=[ValueError])
     async def value_error_is_exception(request) -> int:
         return 10
 
