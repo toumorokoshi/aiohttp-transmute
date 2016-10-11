@@ -28,13 +28,16 @@ def create_handler(transmute_func, context):
                 "success": False,
                 "code": e.code
             }
+        content_type = request.content_type
         try:
-            serializer = context.contenttype_serializers[request.content_type]
+            serializer = context.contenttype_serializers[content_type]
         except NoSerializerFound:
-            serializer = context.contenttype_serializers["json"]
+            serializer = context.contenttype_serializers.default
+            content_type = serializer.main_type
         body = serializer.dump(output)
         return web.Response(
-            body=body, status=output["code"]
+            body=body, status=output["code"],
+            content_type=content_type
         )
 
     handler.transmute_func = transmute_func

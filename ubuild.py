@@ -3,8 +3,6 @@ import subprocess
 
 
 def main(build):
-    build.packages.install("../swagger-schema", develop=True)
-    build.packages.install("../transmute-core", develop=True)
     build.packages.install(".", develop=True)
 
 

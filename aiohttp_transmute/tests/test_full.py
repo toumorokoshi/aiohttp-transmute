@@ -10,11 +10,11 @@ async def _test_unsupported_contenttype_sent():
 
 
 @pytest.mark.asyncio
-async def test_full_app(client_request):
-    resp = await client_request('GET', '/')
+async def test_content_type_in_response(client_request):
+    """ the content type should be specified in the response. """
+    resp = await client_request('GET', '/optional')
     assert 200 == resp.status
-    text = await resp.text()
-    assert "Hello" in text
+    assert resp.headers['Content-Type'] == 'application/json'
 
 
 @pytest.mark.asyncio
