@@ -6,7 +6,12 @@ aiohttp-transmute
     :alt: build status
     :target: https://travis-ci.org/toumorokoshi/aiohttp-transmute
 
-A `transmute<http://transmute-core.readthedocs.io/>`_ implementation for aiohttp.
+.. image:: https://coveralls.io/repos/github/toumorokoshi/aiohttp-transmute/badge.svg?branch=master
+    :alt: coverage status
+    :target: https://coveralls.io/github/toumorokoshi/aiohttp-transmute?branch=master
+
+
+A transmute (http://transmute-core.readthedocs.io/) implementation for aiohttp.
 
 You can find out more here:
 
