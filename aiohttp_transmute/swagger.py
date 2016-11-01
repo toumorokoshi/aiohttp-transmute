@@ -34,7 +34,7 @@ def add_swagger_api_route(app, target_route, swagger_json_route):
     ).encode("utf-8")
 
     async def swagger_ui(request):
-        return web.Response(body=swagger_body)
+        return web.Response(body=swagger_body, content_type="text/html")
 
     app.router.add_route("GET", target_route, swagger_ui)
     app.router.add_static(STATIC_ROOT, static_root)
@@ -62,7 +62,8 @@ def create_swagger_json_handler(app, title="example", version="1.0"):
             headers={
                 "Access-Control-Allow-Origin": "*"
             },
-            body=encoded_spec
+            body=encoded_spec,
+            content_type="application/json",
         )
 
     return swagger

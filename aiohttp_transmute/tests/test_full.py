@@ -91,6 +91,7 @@ async def test_config(client_request):
 async def test_swagger(client_request):
     resp = await client_request('GET', '/swagger.json')
     assert 200 == resp.status
+    assert "application/json" == resp.headers["Content-Type"]
     text = await resp.text()
     assert json.loads(text)["paths"]["/multiply"]["get"]["responses"] == {
         "200": {
@@ -115,3 +116,10 @@ async def test_swagger(client_request):
             },
             "description": "invalid input received"}
     }
+
+
+@pytest.mark.asyncio
+async def test_swagger_page(client_request):
+    resp = await client_request('GET', '/swagger')
+    assert 200 == resp.status
+    assert "text/html" == resp.headers["Content-Type"]
