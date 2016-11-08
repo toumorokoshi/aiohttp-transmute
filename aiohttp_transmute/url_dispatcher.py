@@ -1,8 +1,18 @@
+import warnings
 from aiohttp.web import UrlDispatcher
 from collections import OrderedDict
 from transmute_core import default_context, describe
 from transmute_core.function import TransmuteFunction
 from .handler import create_handler
+
+WARNING_TEXT = """
+TransmuteUrlDispatcher has been deprecated in favor of
+aiohttp_transmute.add_transmute_route(app, *args).
+
+It also does not support mounting subapplications.
+
+TransmuteUrlDispatcher will be removed in the first release after
+01/2016.""".strip()
 
 
 class TransmuteUrlDispatcher(UrlDispatcher):
@@ -12,7 +22,8 @@ class TransmuteUrlDispatcher(UrlDispatcher):
     """
 
     def __init__(self, *args, context=default_context, **kwargs):
-        super().__init__()
+        warnings.warn(warnings.DeprecationWarning(WARNING_TEXT))
+        super().__init__(app=None)
         self._transmute_context = context
         self._swagger = {}
 

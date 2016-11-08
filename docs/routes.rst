@@ -2,6 +2,10 @@
 Routes
 ======
 
+aiohttp-transmute expects that an application is using the default
+aiohttp UrlDispatcher as it's router. It is currently not designed to
+be used with other routers.
+
 -------
 Example
 -------

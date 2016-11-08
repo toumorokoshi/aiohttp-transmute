@@ -1,7 +1,7 @@
 from aiohttp import web
 import aiohttp_transmute
 from aiohttp_transmute import (
-    describe, TransmuteUrlDispatcher, add_swagger, add_transmute_route
+    describe, TransmuteUrlDispatcher, add_swagger
 )
 
 async def handle(request):
@@ -39,17 +39,17 @@ async def multiple_query_params(tag: [str]) -> str:
 
 
 def create_app(loop):
-    app = web.Application(loop=loop)
+    app = web.Application(loop=loop, router=TransmuteUrlDispatcher())
     app["config"] = {"test": "foo"}
-    add_transmute_route(app, 'GET', '/', handle)
+    app.router.add_route('GET', '/', handle)
     # the preferred form.
-    add_transmute_route(app, "GET", "/describe_later", describe_later)
-    add_transmute_route(app, "GET", "/multiple_query_params", multiple_query_params)
-    # route is predefined ported.
-    add_transmute_route(app, multiply)
-    add_transmute_route(app, get_id)
-    add_transmute_route(app, config)
-    add_transmute_route(app, get_optional)
+    app.router.add_transmute_route("GET", "/describe_later", describe_later)
+    app.router.add_transmute_route("GET", "/multiple_query_params", multiple_query_params)
+    # the legacy form should be supported.
+    app.router.add_transmute_route(multiply)
+    app.router.add_transmute_route(get_id)
+    app.router.add_transmute_route(config)
+    app.router.add_transmute_route(get_optional)
     # this should be at the end, to ensure all routes are considered when
     # constructing the handler.
     add_swagger(app, "/swagger.json", "/swagger")

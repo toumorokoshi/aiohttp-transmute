@@ -14,7 +14,7 @@ install_requires = [
 tests_require = []
 
 setup(name='aiohttp-transmute',
-      version='0.2.13b',
+      version='0.3.0',
       description='a toolset to generate routes from objects for aiohttp.',
       long_description=open(README_PATH).read(),
       author='Yusuke Tsutsumi',

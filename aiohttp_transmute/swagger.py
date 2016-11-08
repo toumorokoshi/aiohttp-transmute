@@ -7,6 +7,7 @@ from transmute_core.swagger import (
     get_swagger_static_root
 )
 
+SWAGGER_SCHEMA_KEY = "AIOHTTP_TRANSMUTE_SWAGGER"
 STATIC_ROOT = "/_swagger/static"
 
 
@@ -48,10 +49,13 @@ def create_swagger_json_handler(app, title="example", version="1.0"):
     This method assumes the application is using the
     TransmuteUrlDispatcher as the router.
     """
+    swagger_schema = app.get(SWAGGER_SCHEMA_KEY)
+    if swagger_schema is None:
+        swagger_schema = app.router.swagger_paths()
 
     spec = Swagger({
         "info": Info({"title": title, "version": version}),
-        "paths": app.router.swagger_paths(),
+        "paths": swagger_schema,
         "swagger": "2.0",
     }).to_primitive()
     encoded_spec = json.dumps(spec).encode("UTF-8")
