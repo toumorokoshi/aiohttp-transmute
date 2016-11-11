@@ -1,0 +1,106 @@
+Changelog
+=========
+
+v0.2.13 (2016-11-11)
+--------------------
+
+Fix
+~~~
+
+- Compatible with version 1.1.3+ of aiohttp. [Yusuke Tsutsumi]
+
+Other
+~~~~~
+
+- Adding changelogs. [Yusuke Tsutsumi]
+
+v0.2.12 (2016-11-01)
+--------------------
+
+- Adding content types for swagger. [Yusuke Tsutsumi]
+
+- Fixing up readme. [Yusuke Tsutsumi]
+
+- Adding coveralls support. [Yusuke Tsutsumi]
+
+- Adding travis testing, fixing up readme. [Yusuke Tsutsumi]
+
+- Make example work. [Michael Flaxman]
+
+  Syntax was invalid and swagger docs endpoint didn't work
+
+- Fixing issues with content-type not set in the response header.
+  [Yusuke Tsutsumi]
+
+- Fix missing "@" from decarator. [Vladimir Rutsky]
+
+- Adding some examples of optional values. [Yusuke Tsutsumi]
+
+- Fixing an issue with parsing get arguments which accept multiple
+  values. [Yusuke Tsutsumi]
+
+- Adding a new way to add aiohttp_transmute routes. [Yusuke Tsutsumi]
+
+- Adding route documentation. [Yusuke Tsutsumi]
+
+- Fixing up unit tests. [Yusuke Tsutsumi]
+
+v0.2.1 (2016-05-17)
+-------------------
+
+- Accomodating new changes to transmute-core. [Yusuke Tsutsumi]
+
+- Adding tests for swagger and basic serialization. [Yusuke Tsutsumi]
+
+- Proof of concept of shared utility functions for aiohttp. [Yusuke
+  Tsutsumi]
+
+- Have aiohttp documented pretty well. [Yusuke Tsutsumi]
+
+- Styling up the docs. [Yusuke Tsutsumi]
+
+- Added a pretty complete set of documentation. [Yusuke Tsutsumi]
+
+- Adding some docs. [Yusuke Tsutsumi]
+
+- Fixing a bug. [Yusuke Tsutsumi]
+
+- Working on some unit tests. [Yusuke Tsutsumi]
+
+- Adding compatability with new transmute-core. [Yusuke Tsutsumi]
+
+- New version, compatible with transmute-core. [Yusuke Tsutsumi]
+
+v0.0.7 (2016-04-17)
+-------------------
+
+- Honoring path parameters, reflecting changes in APIException. [Yusuke
+  Tsutsumi]
+
+- Using new web-transmute code. [Yusuke Tsutsumi]
+
+- Promoted 0.0.4, onto 0.0.5. [Yusuke Tsutsumi]
+
+v0.0.4 (2016-04-04)
+-------------------
+
+- Using changes from new web-transmute. [Yusuke Tsutsumi]
+
+- Adding json as the default content type, support for the 'request'
+  parameter. [Yusuke Tsutsumi]
+
+- Omitting the request parameter. [Yusuke Tsutsumi]
+
+- Upping version. [Yusuke Tsutsumi]
+
+- Added a POC for swagger. [Yusuke Tsutsumi]
+
+- Have basic GET routing. [Yusuke Tsutsumi]
+
+- Close to working example. [Yusuke Tsutsumi]
+
+- Starting work on a transmute library for aiohttp. [Yusuke Tsutsumi]
+
+- Initial commit. [Yusuke Tsutsumi]
+
+
