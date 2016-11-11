@@ -29,6 +29,14 @@ def distribute(build):
     ])
 
 
+def stamp(build):
+    """ after a distribution, stamp the current build. """
+    build.packages.install("gitchangelog")
+    changelog_text = subprocess.check_output(["gitchangelog"])
+    with open(os.path.join(build.root, "CHANGELOG"), "wb+") as fh:
+        fh.write(changelog_text)
+
+
 def build_docs(build):
     build.packages.install("sphinx")
     return subprocess.call(
