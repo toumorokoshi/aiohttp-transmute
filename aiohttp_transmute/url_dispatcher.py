@@ -12,7 +12,7 @@ class TransmuteUrlDispatcher(UrlDispatcher):
     """
 
     def __init__(self, *args, context=default_context, **kwargs):
-        super().__init__()
+        super().__init__(app=None)
         self._transmute_context = context
         self._swagger = {}
 

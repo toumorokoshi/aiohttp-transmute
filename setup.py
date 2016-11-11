@@ -8,13 +8,13 @@ README_PATH = os.path.join(base, "README.rst")
 
 install_requires = [
     'transmute-core>=0.2.11',
-    'aiohttp'
+    'aiohttp>=1.1.3'
 ]
 
 tests_require = []
 
 setup(name='aiohttp-transmute',
-      version='0.2.13b',
+      version='0.2.13',
       description='a toolset to generate routes from objects for aiohttp.',
       long_description=open(README_PATH).read(),
       author='Yusuke Tsutsumi',
