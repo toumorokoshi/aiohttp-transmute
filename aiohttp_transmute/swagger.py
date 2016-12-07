@@ -53,6 +53,7 @@ def create_swagger_json_handler(app, title="example", version="1.0"):
         "info": Info({"title": title, "version": version}),
         "paths": app.router.swagger_paths(),
         "swagger": "2.0",
+        "basePath": "/",
     }).to_primitive()
     encoded_spec = json.dumps(spec).encode("UTF-8")
 

@@ -97,6 +97,7 @@ async def test_swagger(client_request):
         "200": {
             "schema": {
                 "title": "SuccessObject",
+                "type": "object",
                 "required": ["success", "result"],
                 "properties": {
                     "result": {"type": "number"},
@@ -108,6 +109,7 @@ async def test_swagger(client_request):
         "400": {
             "schema": {
                 "title": "FailureObject",
+                "type": "object",
                 "required": ["success", "message"],
                 "properties": {
                     "message": {"type": "string"},
