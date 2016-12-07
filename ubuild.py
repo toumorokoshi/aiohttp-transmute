@@ -20,12 +20,12 @@ def test(build):
     ] + build.options.args)
 
 
-def distribute(build):
+def publish(build):
     """ distribute the uranium package """
     build.packages.install("wheel")
     build.executables.run([
         "python", "setup.py",
-        "sdist", "bdist_wheel", "--universal", "upload"
+        "sdist", "bdist_wheel", "--universal", "upload", "--release"
     ])
 
 
