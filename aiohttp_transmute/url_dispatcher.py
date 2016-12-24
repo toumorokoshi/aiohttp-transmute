@@ -1,21 +1,28 @@
+import warnings
 from aiohttp.web import UrlDispatcher
 from collections import OrderedDict
 from transmute_core import default_context, describe
 from transmute_core.function import TransmuteFunction
 from transmute_core.swagger import SwaggerSpec
-from .handler import create_handler
+from .route import add_route
 
 
 class TransmuteUrlDispatcher(UrlDispatcher):
     """
+    .. warning:: The TransmuteUrlDispatcher is deprecated.
+                 please use aiohttp_transmute.add_route instead.
+
     A UrlDispatcher which instruments the add_route function to
     collect swagger spec data from transmuted functions.
     """
 
     def __init__(self, *args, context=default_context, **kwargs):
-        super().__init__(app=None)
+        warnings.warn(("TransmuteUrlDispatch has been deprecated. "
+                       " And will be removed in a future version. "
+                       " Please use aiohttp_transmute.add_route instead. "),
+                      DeprecationWarning, stacklevel=2)
+        super().__init__()
         self._transmute_context = context
-        self._swagger = SwaggerSpec()
 
     def add_transmute_route(self, *args):
         """
@@ -35,36 +42,10 @@ class TransmuteUrlDispatcher(UrlDispatcher):
             fn = args[0]
         elif len(args) == 3:
             methods, paths, fn = args
-            describe(methods=methods, paths=paths)(fn)
+            fn = describe(methods=methods, paths=paths)(fn)
         else:
             raise ValueError(
                 "expected one or three arguments for add_transmute_route!"
             )
-        transmute_func = TransmuteFunction(
-            fn,
-            args_not_from_request=["request"]
-        )
-        handler = create_handler(
-            transmute_func, context=self._transmute_context
-        )
-        self._swagger.add_func(transmute_func, self._transmute_context)
-        swagger_path = transmute_func.get_swagger_path(self._transmute_context)
 
-        for p in transmute_func.paths:
-            aiohttp_path = self._convert_to_aiohttp_path(p)
-            resource = self.add_resource(aiohttp_path)
-            for method in transmute_func.methods:
-                resource.add_route(method, handler)
-
-    @property
-    def swagger(self):
-        """
-        returns a swagger Paths object representing all transmute
-        functions registered.
-        """
-        return self._swagger
-
-    @staticmethod
-    def _convert_to_aiohttp_path(path):
-        """ convert a transmute path to one supported by aiohttp. """
-        return path
+        add_route(self._app, fn, context=self._transmute_context)

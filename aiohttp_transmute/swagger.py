@@ -4,10 +4,18 @@ from swagger_schema import Swagger, Info
 
 from transmute_core.swagger import (
     generate_swagger,
-    get_swagger_static_root
+    get_swagger_static_root,
+    SwaggerSpec
 )
 
 STATIC_ROOT = "/_swagger/static"
+APP_KEY = "_aiohttp_transmute_swagger"
+
+
+def get_swagger_spec(app):
+    if APP_KEY not in app:
+        app[APP_KEY] = SwaggerSpec()
+    return app[APP_KEY]
 
 
 def add_swagger(app, json_route, html_route):
@@ -49,7 +57,7 @@ def create_swagger_json_handler(app, **kwargs):
     TransmuteUrlDispatcher as the router.
     """
 
-    spec = app.router.swagger.swagger_definition(**kwargs)
+    spec = get_swagger_spec(app).swagger_definition(**kwargs)
     encoded_spec = json.dumps(spec).encode("UTF-8")
 
     async def swagger(request):
