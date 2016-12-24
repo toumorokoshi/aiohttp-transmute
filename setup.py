@@ -12,7 +12,7 @@ if "--release" in sys.argv:
     sys.argv.remove("--release")
 
 install_requires = [
-    'transmute-core>=0.2.11',
+    'transmute-core>=0.3.1',
     'aiohttp>=1.1.3'
 ]
 
@@ -24,7 +24,7 @@ setup(name='aiohttp-transmute',
           "is_release": is_release,
           "path": base
       },
-      description='a Toolset to generate routes from objects for aiohttp.',
+      description='a toolset to generate routes from objects for aiohttp.',
       long_description=open(README_PATH).read(),
       author='Yusuke Tsutsumi',
       author_email='yusuke@tsutsumi.io',

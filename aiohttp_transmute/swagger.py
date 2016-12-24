@@ -40,7 +40,7 @@ def add_swagger_api_route(app, target_route, swagger_json_route):
     app.router.add_static(STATIC_ROOT, static_root)
 
 
-def create_swagger_json_handler(app, title="example", version="1.0"):
+def create_swagger_json_handler(app, **kwargs):
     """
     Create a handler that returns the swagger definition
     for an application.
@@ -49,12 +49,7 @@ def create_swagger_json_handler(app, title="example", version="1.0"):
     TransmuteUrlDispatcher as the router.
     """
 
-    spec = Swagger({
-        "info": Info({"title": title, "version": version}),
-        "paths": app.router.swagger_paths(),
-        "swagger": "2.0",
-        "basePath": "/",
-    }).to_primitive()
+    spec = app.router.swagger.swagger_definition(**kwargs)
     encoded_spec = json.dumps(spec).encode("UTF-8")
 
     async def swagger(request):
