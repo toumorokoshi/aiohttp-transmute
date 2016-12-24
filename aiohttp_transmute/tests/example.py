@@ -1,7 +1,7 @@
 from aiohttp import web
 import aiohttp_transmute
 from aiohttp_transmute import (
-    describe, TransmuteUrlDispatcher, add_swagger
+    describe, add_swagger, add_route
 )
 
 async def handle(request):
@@ -24,32 +24,36 @@ async def get_optional(request, include_foo: bool=False) -> bool:
     return include_foo
 
 
+@aiohttp_transmute.describe(
+    paths="/body_and_header",
+    methods="POST",
+    body_parameters=["body"],
+    header_parameters=["header"]
+)
+async def body_and_header(request, body: str, header: str) -> bool:
+    return body == header
+
+
 @aiohttp_transmute.describe(paths="/config")
 async def config(request):
     return request.app["config"]
 
 
-@aiohttp_transmute.describe()
-async def describe_later() -> str:
-    return "foo"
-
-
+@aiohttp_transmute.describe(paths="/multiple_query_params")
 async def multiple_query_params(tag: [str]) -> str:
     return ",".join(tag)
 
 
 def create_app(loop):
-    app = web.Application(loop=loop, router=TransmuteUrlDispatcher())
+    app = web.Application(loop=loop)
     app["config"] = {"test": "foo"}
     app.router.add_route('GET', '/', handle)
-    # the preferred form.
-    app.router.add_transmute_route("GET", "/describe_later", describe_later)
-    app.router.add_transmute_route("GET", "/multiple_query_params", multiple_query_params)
-    # the legacy form should be supported.
-    app.router.add_transmute_route(multiply)
-    app.router.add_transmute_route(get_id)
-    app.router.add_transmute_route(config)
-    app.router.add_transmute_route(get_optional)
+    add_route(app, multiple_query_params)
+    add_route(app, multiply)
+    add_route(app, get_id)
+    add_route(app, config)
+    add_route(app, get_optional)
+    add_route(app, body_and_header)
     # this should be at the end, to ensure all routes are considered when
     # constructing the handler.
     add_swagger(app, "/swagger.json", "/swagger")

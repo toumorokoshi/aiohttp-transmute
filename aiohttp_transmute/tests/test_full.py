@@ -2,24 +2,17 @@ import pytest
 import json
 
 
-# TODO:
 @pytest.mark.asyncio
-async def _test_unsupported_contenttype_sent():
-    """ an unsupported contenttype should return a 400 """
-    raise Exception()
-
-
-@pytest.mark.asyncio
-async def test_content_type_in_response(client_request):
+async def test_content_type_in_response(cli):
     """ the content type should be specified in the response. """
-    resp = await client_request('GET', '/optional')
+    resp = await cli.get('/optional')
     assert 200 == resp.status
     assert resp.headers['Content-Type'] == 'application/json'
 
 
 @pytest.mark.asyncio
-async def test_multiply(client_request):
-    resp = await client_request('GET', '/multiply?left=5&right=10')
+async def test_multiply(cli):
+    resp = await cli.get('/multiply?left=5&right=10')
     assert 200 == resp.status
     text = await resp.text()
     assert json.loads(text) == {
@@ -30,8 +23,8 @@ async def test_multiply(client_request):
 
 
 @pytest.mark.asyncio
-async def test_multiply_bad_int(client_request):
-    resp = await client_request('GET', '/multiply?left=foo&right=0x00')
+async def test_multiply_bad_int(cli):
+    resp = await cli.get('/multiply?left=foo&right=0x00')
     assert 400 == resp.status
     ret_value = await resp.json()
     assert ret_value["success"] is False
@@ -39,33 +32,37 @@ async def test_multiply_bad_int(client_request):
 
 
 @pytest.mark.asyncio
-async def test_optional(client_request):
-    resp = await client_request('GET', '/optional')
+async def test_optional(cli):
+    resp = await cli.get('/optional')
     assert 200 == resp.status
     ret_value = await resp.json()
     assert ret_value["result"] is False
 
 
 @pytest.mark.asyncio
-async def test_optional_with_value(client_request):
-    resp = await client_request('GET', '/optional?include_foo=true')
+async def test_optional_with_value(cli):
+    resp = await cli.get('/optional?include_foo=true')
     assert 200 == resp.status
     ret_value = await resp.json()
     assert ret_value["result"] is True
 
 
 @pytest.mark.asyncio
-async def test_describe_later(client_request):
-    resp = await client_request('GET', '/describe_later')
+async def test_body_and_header(cli):
+    resp = await cli.post('/body_and_header',
+                          data=json.dumps({"body": "body"}),
+                          headers={
+                              "content-type": "application/json",
+                              "header": "header"
+                          })
     assert 200 == resp.status
     ret_value = await resp.json()
-    assert ret_value["success"] is True
-    assert ret_value["result"] == "foo"
+    assert ret_value["result"] is False
 
 
 @pytest.mark.asyncio
-async def test_get_id(client_request):
-    resp = await client_request('GET', '/id/10')
+async def test_get_id(cli):
+    resp = await cli.get('/id/10')
     assert 200 == resp.status
     text = await resp.text()
     assert json.loads(text) == {
@@ -76,8 +73,8 @@ async def test_get_id(client_request):
 
 
 @pytest.mark.asyncio
-async def test_config(client_request):
-    resp = await client_request('GET', '/config')
+async def test_config(cli):
+    resp = await cli.get('/config')
     assert 200 == resp.status
     text = await resp.text()
     assert json.loads(text) == {
@@ -88,8 +85,8 @@ async def test_config(client_request):
 
 
 @pytest.mark.asyncio
-async def test_swagger(client_request):
-    resp = await client_request('GET', '/swagger.json')
+async def test_swagger(cli):
+    resp = await cli.get('/swagger.json')
     assert 200 == resp.status
     assert "application/json" == resp.headers["Content-Type"]
     text = await resp.text()
@@ -121,7 +118,7 @@ async def test_swagger(client_request):
 
 
 @pytest.mark.asyncio
-async def test_swagger_page(client_request):
-    resp = await client_request('GET', '/swagger')
+async def test_swagger_page(cli):
+    resp = await cli.get('/swagger')
     assert 200 == resp.status
     assert "text/html" == resp.headers["Content-Type"]
