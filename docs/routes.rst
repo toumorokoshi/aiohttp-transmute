@@ -21,7 +21,7 @@ a decorator converting a function to an aiohttp route:
         return left + right
 
     # append to your route later
-    app.router.add_transmute_route(multiply)
+    aiohttp_transmute.add_route(app, multiply)
 
 ------------------------
 query parameters vs body
@@ -47,8 +47,8 @@ parse the body.
         return left + right
 
     # append to your route later
-    app.router.add_transmute_route(multiply)
-    app.router.add_transmute_route(multiply_post)
+    aiohttp_transmute.add_route(app, multiply)
+    aiohttp_transmute.add_route(app, multiply_post)
 
 -----------------
 API Documentation

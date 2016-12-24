@@ -23,28 +23,23 @@ Example
     from aiohttp import web
     import aiohttp_transmute
 
-    async def define_path_later(request) -> int:
-        return 10
-
-    # further specialization is available via describe
-    # via aiohttp_transmute.describe
-    @aiohttp_transmute.describe(error_exceptions=[ValueError])
-    async def value_error_is_exception(request) -> int:
-        return 10
-
     # define a GET endpoint, taking a query parameter integers left and right,
     # which must be integers.
     @aiohttp_transmute.describe(paths="/customers/{name}")
     async def multiply(request, name: str, left: int, right: int) -> int:
         return left + right
 
+    # define a POST endpoint, taking a query parameter integers left and right,
+    # which must be integers.
+    @aiohttp_transmute.describe(methods="POST", paths="/customers/{name}")
+    async def multiply_post(request, name: str, left: int, right: int) -> int:
+        return left + right
 
-    app = web.Application(
-        # a custom router is needed to help find the transmute functions.
-        router=aiohttp_transmute.TransmuteUrlDispatcher(),
-    )
-    app.router.add_transmute_route("GET", "/define_path_here", define_path_later)
-    app.router.add_transmute_route(multiply)
+
+    app = web.Application()
+    # use add_route to add the function to the app.
+    aiohttp_transmute.add_route(app, multiply)
+    aiohttp_transmute.add_route(app, multiply_post)
     # this should be at the end, to ensure all routes are considered when
     # constructing the handler.
     # this will add:
