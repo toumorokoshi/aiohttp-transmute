@@ -15,20 +15,13 @@ async def test_multiply(cli):
     resp = await cli.get('/multiply?left=5&right=10')
     assert 200 == resp.status
     text = await resp.text()
-    assert json.loads(text) == {
-        "result": 50,
-        "success": True,
-        "code": 200
-    }
+    assert json.loads(text) == 50
 
 
 @pytest.mark.asyncio
 async def test_multiply_bad_int(cli):
     resp = await cli.get('/multiply?left=foo&right=0x00')
     assert 400 == resp.status
-    ret_value = await resp.json()
-    assert ret_value["success"] is False
-    assert ret_value["code"] == 400
 
 
 @pytest.mark.asyncio
@@ -36,7 +29,7 @@ async def test_optional(cli):
     resp = await cli.get('/optional')
     assert 200 == resp.status
     ret_value = await resp.json()
-    assert ret_value["result"] is False
+    assert ret_value is False
 
 
 @pytest.mark.asyncio
@@ -44,7 +37,7 @@ async def test_optional_with_value(cli):
     resp = await cli.get('/optional?include_foo=true')
     assert 200 == resp.status
     ret_value = await resp.json()
-    assert ret_value["result"] is True
+    assert ret_value is True
 
 
 @pytest.mark.asyncio
@@ -57,7 +50,7 @@ async def test_body_and_header(cli):
                           })
     assert 200 == resp.status
     ret_value = await resp.json()
-    assert ret_value["result"] is False
+    assert ret_value is False
 
 
 @pytest.mark.asyncio
@@ -65,11 +58,7 @@ async def test_get_id(cli):
     resp = await cli.get('/id/10')
     assert 200 == resp.status
     text = await resp.text()
-    assert json.loads(text) == {
-        "result": "your id is: 10",
-        "success": True,
-        "code": 200
-    }
+    assert json.loads(text) == "your id is: 10"
 
 
 @pytest.mark.asyncio
@@ -77,11 +66,7 @@ async def test_config(cli):
     resp = await cli.get('/config')
     assert 200 == resp.status
     text = await resp.text()
-    assert json.loads(text) == {
-        "result": {"test": "foo"},
-        "success": True,
-        "code": 200
-    }
+    assert json.loads(text) == {"test": "foo"}
 
 
 @pytest.mark.asyncio
@@ -92,15 +77,7 @@ async def test_swagger(cli):
     text = await resp.text()
     assert json.loads(text)["paths"]["/multiply"]["get"]["responses"] == {
         "200": {
-            "schema": {
-                "title": "SuccessObject",
-                "type": "object",
-                "required": ["success", "result"],
-                "properties": {
-                    "result": {"type": "number"},
-                    "success": {"type": "boolean"}
-                }
-            },
+            "schema": {"type": "number"},
             "description": "success"
         },
         "400": {

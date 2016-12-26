@@ -1,9 +1,8 @@
 import json
 from aiohttp import web
-from swagger_schema import Swagger, Info
 
 from transmute_core.swagger import (
-    generate_swagger,
+    generate_swagger_html,
     get_swagger_static_root,
     SwaggerSpec
 )
@@ -37,7 +36,7 @@ def add_swagger_api_route(app, target_route, swagger_json_route):
         expected to be.
     """
     static_root = get_swagger_static_root()
-    swagger_body = generate_swagger(
+    swagger_body = generate_swagger_html(
         STATIC_ROOT, swagger_json_route
     ).encode("utf-8")
 
