@@ -33,7 +33,7 @@ def add_swagger_api_route(app, target_route, swagger_json_route):
     app: the aiohttp app object
     target_route: the path to mount the statics page.
     swagger_json_route: the path where the swagger json definitions is
-        expected to be.
+                        expected to be.
     """
     static_root = get_swagger_static_root()
     swagger_body = generate_swagger_html(

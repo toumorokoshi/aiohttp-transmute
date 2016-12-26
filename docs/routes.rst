@@ -23,32 +23,8 @@ a decorator converting a function to an aiohttp route:
     # append to your route later
     aiohttp_transmute.add_route(app, multiply)
 
-------------------------
-query parameters vs body
-------------------------
-
-As with most transmute frameworks, a GET transmute function
-will use queryparamters as the function arguments, while every
-other request type will assume the body is a dictionary, and
-parse the body.
-
-.. code-block:: python
-
-    import aiohttp_transmute
-
-    # interpreted as query parameters
-    @aiohttp_transmute.describe(paths="/{name}")
-    async def multiply(request, name: str, left: int, right: int) -> int:
-        return left + right
-
-    # interpreted as body parameters
-    @aiohttp_transmute.describe(methods=["POST"], paths="/{name}")
-    async def multiply_post(request, name: str, left: int, right: int) -> int:
-        return left + right
-
-    # append to your route later
-    aiohttp_transmute.add_route(app, multiply)
-    aiohttp_transmute.add_route(app, multiply_post)
+see `transmute-core:function <http://transmute-core.readthedocs.io/en/latest/function.html#functions>`_ for more information on customizing
+transmute routes.
 
 -----------------
 API Documentation

@@ -6,8 +6,10 @@
 aiohttp-transmute
 =================
 
-A transmute framework for `aiohttp <http://aiohttp.readthedocs.org/>`_. This framework
-provides:
+A `transmute
+<http://transmute-core.readthedocs.io/en/latest/index.html>`_
+framework for `aiohttp <http://aiohttp.readthedocs.org/>`_. This
+framework provides:
 
 * declarative generation of http handler interfaces by parsing function annotations
 * validation and serialization to and from a variety of content types (e.g. json or yaml).
@@ -48,6 +50,8 @@ Example
     aiohttp_transmute.add_swagger(app, "/swagger.json", "/swagger")
     web.run_app(app)
 
+
+A lot of relevant documentation for aiohttp-transmute can be found at `transmute-core docs <http://transmute-core.readthedocs.io/en/latest/index.html>`_
 
 Contents:
 
