@@ -25,6 +25,15 @@ async def test_multiply_bad_int(cli):
 
 
 @pytest.mark.asyncio
+async def test_error(cli):
+    """ HTTPProcessingErrors should be honored. """
+    resp = await cli.get('/aiohttp_error')
+    assert 403 == resp.status
+    text = await resp.text()
+    assert "unauthorized" in json.loads(text)["result"]
+
+
+@pytest.mark.asyncio
 async def test_optional(cli):
     resp = await cli.get('/optional')
     assert 200 == resp.status

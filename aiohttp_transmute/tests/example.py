@@ -3,6 +3,7 @@ import aiohttp_transmute
 from aiohttp_transmute import (
     describe, add_swagger, add_route, route
 )
+from aiohttp.errors import HttpProcessingError
 
 async def handle(request):
     text = "Hello, can you hear me?"
@@ -22,6 +23,11 @@ async def get_id(request, my_id: str) -> str:
 @aiohttp_transmute.describe(paths="/optional")
 async def get_optional(request, include_foo: bool=False) -> bool:
     return include_foo
+
+
+@aiohttp_transmute.describe(paths="/aiohttp_error")
+async def error(request):
+    raise HttpProcessingError(code=403, message="unauthorized")
 
 
 @aiohttp_transmute.describe(
@@ -54,6 +60,7 @@ def create_app(loop):
     route(app, config)
     route(app, get_optional)
     route(app, body_and_header)
+    route(app, error)
     # this should be at the end, to ensure all routes are considered when
     # constructing the handler.
     add_swagger(app, "/swagger.json", "/swagger")
