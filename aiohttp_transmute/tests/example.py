@@ -1,7 +1,7 @@
 from aiohttp import web
 import aiohttp_transmute
 from aiohttp_transmute import (
-    describe, add_swagger, add_route
+    describe, add_swagger, add_route, route
 )
 
 async def handle(request):
@@ -51,9 +51,9 @@ def create_app(loop):
     add_route(app, multiple_query_params)
     add_route(app, multiply)
     add_route(app, get_id)
-    add_route(app, config)
-    add_route(app, get_optional)
-    add_route(app, body_and_header)
+    route(app, config)
+    route(app, get_optional)
+    route(app, body_and_header)
     # this should be at the end, to ensure all routes are considered when
     # constructing the handler.
     add_swagger(app, "/swagger.json", "/swagger")

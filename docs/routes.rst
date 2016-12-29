@@ -21,7 +21,7 @@ a decorator converting a function to an aiohttp route:
         return left + right
 
     # append to your route later
-    aiohttp_transmute.add_route(app, multiply)
+    aiohttp_transmute.route(app, multiply)
 
 see `transmute-core:function <http://transmute-core.readthedocs.io/en/latest/function.html#functions>`_ for more information on customizing
 transmute routes.

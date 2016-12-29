@@ -40,8 +40,8 @@ Example
 
     app = web.Application()
     # use add_route to add the function to the app.
-    aiohttp_transmute.add_route(app, multiply)
-    aiohttp_transmute.add_route(app, multiply_post)
+    aiohttp_transmute.route(app, multiply)
+    aiohttp_transmute.route(app, multiply_post)
     # this should be at the end, to ensure all routes are considered when
     # constructing the handler.
     # this will add:
