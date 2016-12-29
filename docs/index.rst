@@ -58,6 +58,7 @@ Contents:
 .. toctree::
    :maxdepth: 2
 
+   install
    routes
    serialization
    documentation

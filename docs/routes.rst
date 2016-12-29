@@ -23,6 +23,9 @@ a decorator converting a function to an aiohttp route:
     # append to your route later
     aiohttp_transmute.route(app, multiply)
 
+the aiohttp request argument is supported: it will be passed into
+any function that has 'request' in it's function signature.
+
 see `transmute-core:function <http://transmute-core.readthedocs.io/en/latest/function.html#functions>`_ for more information on customizing
 transmute routes.
 
