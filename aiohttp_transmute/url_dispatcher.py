@@ -24,6 +24,12 @@ class TransmuteUrlDispatcher(UrlDispatcher):
         super().__init__()
         self._transmute_context = context
 
+    def post_init(self, app):
+        """
+        this must be called after dispatcher creation, to ensure proper operability.
+        """
+        self._app = app
+
     def add_transmute_route(self, *args):
         """
         two formats are accepted, for transmute routes. One allows
