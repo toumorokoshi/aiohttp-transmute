@@ -93,9 +93,9 @@ async def test_swagger(cli):
             "schema": {
                 "title": "FailureObject",
                 "type": "object",
-                "required": ["success", "message"],
+                "required": ["success", "result"],
                 "properties": {
-                    "message": {"type": "string"},
+                    "result": {"type": "string"},
                     "success": {"type": "boolean"}
                 }
             },

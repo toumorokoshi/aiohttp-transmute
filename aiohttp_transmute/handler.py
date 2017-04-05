@@ -1,5 +1,5 @@
 from functools import wraps
-from aiohttp.errors import HttpProcessingError
+from aiohttp.web import HTTPException
 from transmute_core.exceptions import APIException, NoSerializerFound
 from transmute_core.function.signature import NoDefault
 from transmute_core import ParamExtractor, NoArgument
@@ -15,9 +15,9 @@ def create_handler(transmute_func, context):
             args, kwargs = await extract_params(request, context,
                                                 transmute_func)
             result = await transmute_func.raw_func(*args, **kwargs)
-        except HttpProcessingError as hpe:
-            code = hpe.code if hasattr(hpe, "code") else 400
-            exc = APIException(code=code, message=str(hpe.message))
+        except HTTPException as hpe:
+            code = hpe.status_code or 400
+            exc = APIException(code=code, message=str(hpe))
         except Exception as e:
             exc = e
         response = transmute_func.process_result(

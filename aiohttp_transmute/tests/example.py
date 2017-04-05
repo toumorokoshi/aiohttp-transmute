@@ -3,7 +3,7 @@ import aiohttp_transmute
 from aiohttp_transmute import (
     describe, add_swagger, add_route, route
 )
-from aiohttp.errors import HttpProcessingError
+from aiohttp.web import HTTPForbidden
 
 async def handle(request):
     text = "Hello, can you hear me?"
@@ -27,7 +27,7 @@ async def get_optional(request, include_foo: bool=False) -> bool:
 
 @aiohttp_transmute.describe(paths="/aiohttp_error")
 async def error(request):
-    raise HttpProcessingError(code=403, message="unauthorized")
+    raise HTTPForbidden(reason="unauthorized")
 
 
 @aiohttp_transmute.describe(
