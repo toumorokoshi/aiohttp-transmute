@@ -34,6 +34,15 @@ async def test_error(cli):
 
 
 @pytest.mark.asyncio
+async def test_api_exception(cli):
+    """ APIException should be honored. """
+    resp = await cli.get('/api_exception')
+    assert 400 == resp.status
+    text = await resp.text()
+    assert "nope" in json.loads(text)["result"]
+
+
+@pytest.mark.asyncio
 async def test_optional(cli):
     resp = await cli.get('/optional')
     assert 200 == resp.status

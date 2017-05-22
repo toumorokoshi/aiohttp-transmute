@@ -1,9 +1,12 @@
 from aiohttp import web
 import aiohttp_transmute
 from aiohttp_transmute import (
-    describe, add_swagger, add_route, route
+    describe, add_swagger, add_route, route,
+    APIException
 )
 from aiohttp.web import HTTPForbidden
+from .utils import User
+
 
 async def handle(request):
     text = "Hello, can you hear me?"
@@ -28,6 +31,11 @@ async def get_optional(request, include_foo: bool=False) -> bool:
 @aiohttp_transmute.describe(paths="/aiohttp_error")
 async def error(request):
     raise HTTPForbidden(reason="unauthorized")
+
+
+@aiohttp_transmute.describe(paths="/api_exception")
+async def api_exception(request) -> User:
+    raise APIException("nope")
 
 
 @aiohttp_transmute.describe(
@@ -61,6 +69,7 @@ def create_app(loop):
     route(app, get_optional)
     route(app, body_and_header)
     route(app, error)
+    route(app, api_exception)
     # this should be at the end, to ensure all routes are considered when
     # constructing the handler.
     add_swagger(app, "/swagger.json", "/swagger")
