@@ -2,7 +2,7 @@ from aiohttp import web
 import aiohttp_transmute
 from aiohttp_transmute import (
     describe, add_swagger, add_route, route,
-    APIException
+    APIException, Response
 )
 from aiohttp.web import HTTPForbidden
 from .utils import User
@@ -26,6 +26,25 @@ async def get_id(request, my_id: str) -> str:
 @aiohttp_transmute.describe(paths="/optional")
 async def get_optional(request, include_foo: bool=False) -> bool:
     return include_foo
+
+
+@describe(paths="/headers/",
+          response_types={
+              200: {
+                  "type": str,
+                  "description": "success",
+                  "headers": {
+                      "location": {
+                          "description": "url to the location",
+                          "type": str
+                      }
+                  }
+              }
+          })
+async def header_response(request):
+    return Response("foo", headers={
+        "location": "boo"
+    })
 
 
 @aiohttp_transmute.describe(paths="/aiohttp_error")
@@ -65,6 +84,7 @@ def create_app(loop):
     add_route(app, multiple_query_params)
     add_route(app, multiply)
     add_route(app, get_id)
+    add_route(app, header_response)
     route(app, config)
     route(app, get_optional)
     route(app, body_and_header)

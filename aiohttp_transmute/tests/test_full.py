@@ -11,6 +11,13 @@ async def test_content_type_in_response(cli):
 
 
 @pytest.mark.asyncio
+async def test_headers(cli):
+    """ the content type should be specified in the response. """
+    resp = await cli.get('/headers/')
+    assert "boo" == resp.headers["location"]
+
+
+@pytest.mark.asyncio
 async def test_multiply(cli):
     resp = await cli.get('/multiply?left=5&right=10')
     assert 200 == resp.status

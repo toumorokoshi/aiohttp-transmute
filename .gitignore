@@ -64,3 +64,4 @@ bin
 include
 .uranium
 VERSION
+pip-selfchek.json

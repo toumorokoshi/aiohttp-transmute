@@ -25,7 +25,8 @@ def create_handler(transmute_func, context):
         )
         return web.Response(
             body=response["body"], status=response["code"],
-            content_type=response["content-type"]
+            content_type=response["content-type"],
+            headers=response["headers"]
         )
 
     handler.transmute_func = transmute_func
