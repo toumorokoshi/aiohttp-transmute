@@ -102,7 +102,7 @@ async def test_swagger(cli):
     text = await resp.text()
     assert json.loads(text)["paths"]["/multiply"]["get"]["responses"] == {
         "200": {
-            "schema": {"type": "number"},
+            "schema": {"type": "integer"},
             "description": "success"
         },
         "400": {

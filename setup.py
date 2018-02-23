@@ -13,7 +13,7 @@ if "--release" in sys.argv:
 
 install_requires = [
     'transmute-core>=0.4',
-    'aiohttp>=1.1.3'
+    'aiohttp>=2.3.8'
 ]
 
 tests_require = []

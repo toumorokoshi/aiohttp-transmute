@@ -64,4 +64,5 @@ bin
 include
 .uranium
 VERSION
-pip-selfchek.json
+pip-selfcheck.json
+.pytest_cache

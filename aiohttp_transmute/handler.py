@@ -56,12 +56,12 @@ class ParamExtractorAIOHTTP(ParamExtractor):
         return self._body
 
     def _query_argument(self, key, is_list):
-        if key not in self._request.GET:
+        if key not in self._request.query:
             return NoArgument
         if is_list:
-            return self._request.GET.getall(key)
+            return self._request.query.getall(key)
         else:
-            return self._request.GET[key]
+            return self._request.query[key]
 
     def _header_argument(self, key):
         return self._request.headers.get(key, NoArgument)
