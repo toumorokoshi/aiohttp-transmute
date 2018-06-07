@@ -20,14 +20,17 @@ def create_handler(transmute_func, context):
             exc = APIException(code=code, message=str(hpe))
         except Exception as e:
             exc = e
-        response = transmute_func.process_result(
-            context, result, exc, request.content_type
-        )
-        return web.Response(
-            body=response["body"], status=response["code"],
-            content_type=response["content-type"],
-            headers=response["headers"]
-        )
+        if isinstance(result, web.Response):
+            return result
+        else:
+            response = transmute_func.process_result(
+                context, result, exc, request.content_type
+            )
+            return web.Response(
+                body=response["body"], status=response["code"],
+                content_type=response["content-type"],
+                headers=response["headers"]
+            )
 
     handler.transmute_func = transmute_func
     return handler
