@@ -12,7 +12,7 @@ if "--release" in sys.argv:
     sys.argv.remove("--release")
 
 install_requires = [
-    'transmute-core>=0.4',
+    'transmute-core>=1.11.0',
     'aiohttp>=2.3.8'
 ]
 
